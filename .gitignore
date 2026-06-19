@@ -1,0 +1,9 @@
+# React
+frontend/library-frontend/node_modules/
+
+# Spring Boot
+backend/LibraryManagementSystem/target/
+
+# IntelliJ
+.idea/
+*.iml

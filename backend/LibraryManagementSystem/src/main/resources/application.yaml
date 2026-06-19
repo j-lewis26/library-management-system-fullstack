@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: LibraryManagementSystem
+
+  datasource:
+    url: jdbc:sqlite:C:/Users/Jmslewis/Desktop/book.db
+    driver-class-name: org.sqlite.JDBC
+
+mybatis:
+  configuration:
+    map-underscore-to-camel-case: true
+
