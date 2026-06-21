@@ -1,29 +1,38 @@
-import { useState, useEffect } from "react";
 import axios from "axios";
 
-function BookTable() {
+function BookTable({
+    books,
+    fetchBooks,
+    setSelectedBook,
+    setIsModalOpen
+}) {
 
-    const [books, setBooks] = useState([]);
+    const deleteBook = async (id) => {
 
-    const loadBooks = async () => {
+        const confirmDelete =
+            window.confirm("Delete this book?");
+
+        if (!confirmDelete) {
+            return;
+        }
 
         try {
 
-            const response =
-                await axios.get("http://localhost:8080/books");
+            await axios.delete(
+                `http://localhost:8080/books/${id}`
+            );
 
-            setBooks(response.data);
+            alert("Book Deleted Successfully");
+
+            fetchBooks();
 
         } catch (error) {
 
             console.error(error);
 
+            alert("Delete Failed");
         }
     };
-
-    useEffect(() => {
-        loadBooks();
-    }, []);
 
     return (
         <div>
@@ -38,6 +47,7 @@ function BookTable() {
                         <th>Name</th>
                         <th>Author</th>
                         <th>Price</th>
+                        <th>Actions</th>
                     </tr>
                 </thead>
 
@@ -50,6 +60,24 @@ function BookTable() {
                             <td>{book.name}</td>
                             <td>{book.author}</td>
                             <td>${book.price}</td>
+                            <td>
+
+                              <button
+                                  onClick={() => {
+                                      setSelectedBook(book);
+                                      setIsModalOpen(true);
+                                  }}
+                              >
+                                  Edit
+                              </button>
+
+                                <button
+                                    onClick={() => deleteBook(book.id)}
+                                >
+                                    Delete
+                                </button>
+
+                            </td>
                         </tr>
 
                     ))}
