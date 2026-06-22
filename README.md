@@ -52,4 +52,4 @@ npm start
 
 ## Author
 
-JAMSON J.LEWIS
+JAMSON LEWIS
