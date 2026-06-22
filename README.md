@@ -36,6 +36,28 @@ library-management-system-fullstack
 ├── frontend (React UI)
 
 └── screenshots
+   
+   ## Screenshots
+
+### Dashboard
+
+![Dashboard](screenshots/dashboard.png)
+
+### Search
+
+![Search](screenshots/search.png)
+
+### Edit Modal
+
+![Edit Modal](screenshots/edit-modal.png)
+
+### Delete Modal
+
+![Delete Modal](screenshots/delete-modal.png)
+
+### Pagination
+
+![Pagination](screenshots/pagination.png)
 
 ## Installation
 
@@ -52,4 +74,4 @@ npm start
 
 ## Author
 
-JAMSON LEWIS
+JAMSON J.Lewis

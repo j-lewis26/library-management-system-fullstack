@@ -1,17 +1,21 @@
 import { useState } from "react";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 function AddBookForm({ fetchBooks }) {
 
     const [name, setName] = useState("");
     const [author, setAuthor] = useState("");
     const [price, setPrice] = useState("");
+    const [loading, setLoading] = useState(false);
 
     const handleSubmit = async (e) => {
 
         e.preventDefault();
 
         try {
+
+            setLoading(true);
 
             await axios.post(
                 "http://localhost:8080/books",
@@ -22,7 +26,8 @@ function AddBookForm({ fetchBooks }) {
                 }
             );
 
-            alert("Book Added Successfully");
+            toast.success("Book Added Successfully");
+            setLoading(false);
 
             fetchBooks();
 
@@ -33,8 +38,9 @@ function AddBookForm({ fetchBooks }) {
         } catch (error) {
 
             console.error(error);
+            setLoading(false);
 
-            alert("Failed to add book");
+            toast.error("Failed to add book");
         }
     };
 
@@ -66,9 +72,12 @@ function AddBookForm({ fetchBooks }) {
                     onChange={(e) => setPrice(e.target.value)}
                 />
 
-                <button type="submit">
-                    Add Book
-                </button>
+              <button
+                  type="submit"
+                  disabled={loading}
+              >
+                  {loading ? "Saving..." : "Add Book"}
+              </button>
 
             </form>
 

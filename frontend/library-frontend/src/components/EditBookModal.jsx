@@ -1,11 +1,13 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 function EditBookModal({
     book,
     isOpen,
     onClose,
-    fetchBooks
+    fetchBooks,
+    mode // "edit" or "delete"
 }) {
 
     const [name, setName] = useState("");
@@ -15,85 +17,150 @@ function EditBookModal({
     useEffect(() => {
 
         if (book) {
-
             setName(book.name);
             setAuthor(book.author);
             setPrice(book.price);
-
         }
 
     }, [book]);
 
-    const handleSave = async () => {
+    // ESC key support
+    useEffect(() => {
 
-        try {
+        const handleEsc = (e) => {
+            if (e.key === "Escape") {
+                onClose();
+            }
+        };
 
-            await axios.put(
-                `http://localhost:8080/books/${book.id}`,
-                {
-                    name,
-                    author,
-                    price
-                }
-            );
+        window.addEventListener("keydown", handleEsc);
 
-            alert("Book Updated Successfully");
+        return () =>
+            window.removeEventListener("keydown", handleEsc);
 
-            fetchBooks();
+    }, [onClose]);
 
-            onClose();
+const handleUpdate = async () => {
 
-        } catch (error) {
+    try {
 
-            console.error(error);
+        await axios.put(
+            `http://localhost:8080/books/${book.id}`,
+            {
+                name,
+                author,
+                price
+            }
+        );
 
-            alert("Update Failed");
-        }
-    };
+        toast.success("Book Updated Successfully");
 
-    if (!isOpen) {
-        return null;
+        fetchBooks();
+        onClose();
+
+    } catch (error) {
+
+        console.error(error);
+
+        toast.error("Update Failed");
     }
+};
+
+   const handleDelete = async () => {
+
+       try {
+
+           await axios.delete(
+               `http://localhost:8080/books/${book.id}`
+           );
+
+           toast.success("Book Deleted Successfully");
+
+           fetchBooks();
+           onClose();
+
+       } catch (error) {
+
+           console.error(error);
+
+           toast.error("Delete Failed");
+       }
+   };
+
+    if (!isOpen) return null;
 
     return (
-        <div className="modal-overlay">
 
-            <div className="modal">
+        // CLICK OUTSIDE TO CLOSE
+        <div
+            className="modal-overlay"
+            onClick={onClose}
+        >
 
-               <h2>Edit Book</h2>
+            {/* STOP CLICK PROPAGATION */}
+            <div
+                className="modal"
+                onClick={(e) => e.stopPropagation()}
+            >
 
-               <label>Book Name</label>
-               <input
-                   type="text"
-                   value={name}
-                   onChange={(e) => setName(e.target.value)}
-               />
+                {/* EDIT MODE */}
+                {mode === "edit" && (
+                    <>
+                        <h2>Edit Book</h2>
 
-               <label>Author</label>
-               <input
-                   type="text"
-                   value={author}
-                   onChange={(e) => setAuthor(e.target.value)}
-               />
+                        <label>Book Name</label>
+                        <input
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
+                        />
 
-               <label>Price</label>
-               <input
-                   type="number"
-                   value={price}
-                   onChange={(e) => setPrice(e.target.value)}
-               />
+                        <label>Author</label>
+                        <input
+                            value={author}
+                            onChange={(e) => setAuthor(e.target.value)}
+                        />
 
-                <div className="modal-buttons">
+                        <label>Price</label>
+                        <input
+                            value={price}
+                            onChange={(e) => setPrice(e.target.value)}
+                        />
 
-                    <button onClick={handleSave}>
-                        Save Changes
-                    </button>
+                        <div className="modal-buttons">
+                            <button onClick={handleUpdate}>
+                                Save Changes
+                            </button>
+                        </div>
+                    </>
+                )}
 
-                    <button onClick={onClose}>
-                        Cancel
-                    </button>
+                {/* DELETE MODE */}
+                {mode === "delete" && (
+                    <>
+                        <h2>Confirm Delete</h2>
 
-                </div>
+                        <p>
+                            Are you sure you want to delete:
+                        </p>
+
+                        <strong>{book?.name}</strong>
+
+                        <div className="modal-buttons">
+
+                            <button
+                                onClick={handleDelete}
+                                style={{ background: "red", color: "white" }}
+                            >
+                                Delete
+                            </button>
+
+                            <button onClick={onClose}>
+                                Cancel
+                            </button>
+
+                        </div>
+                    </>
+                )}
 
             </div>
 

@@ -1,38 +1,11 @@
-import axios from "axios";
 
 function BookTable({
     books,
     fetchBooks,
     setSelectedBook,
-    setIsModalOpen
+    setIsModalOpen,
+    setModalMode
 }) {
-
-    const deleteBook = async (id) => {
-
-        const confirmDelete =
-            window.confirm("Delete this book?");
-
-        if (!confirmDelete) {
-            return;
-        }
-
-        try {
-
-            await axios.delete(
-                `http://localhost:8080/books/${id}`
-            );
-
-            alert("Book Deleted Successfully");
-
-            fetchBooks();
-
-        } catch (error) {
-
-            console.error(error);
-
-            alert("Delete Failed");
-        }
-    };
 
     return (
         <div>
@@ -53,40 +26,62 @@ function BookTable({
 
                 <tbody>
 
-                    {books.map((book) => (
+                {books.length === 0 ? (
+
+                    <tr>
+                        <td colSpan="5">
+                            No books found
+                        </td>
+                    </tr>
+
+                ) : (
+
+                    books.map((book) => (
 
                         <tr key={book.id}>
                             <td>{book.id}</td>
                             <td>{book.name}</td>
                             <td>{book.author}</td>
                             <td>${book.price}</td>
+
                             <td>
 
-                              <button
-                                  onClick={() => {
-                                      setSelectedBook(book);
-                                      setIsModalOpen(true);
-                                  }}
-                              >
-                                  Edit
-                              </button>
+                                <button
+                                    onClick={() => {
+                                        setSelectedBook(book);
+                                        setModalMode("edit");
+                                        setIsModalOpen(true);
+                                    }}
+                                >
+                                    Edit
+                                </button>
 
                                 <button
-                                    onClick={() => deleteBook(book.id)}
+                                    onClick={() => {
+                                        setSelectedBook(book);
+                                        setModalMode("delete");
+                                        setIsModalOpen(true);
+                                    }}
                                 >
                                     Delete
                                 </button>
 
                             </td>
+
                         </tr>
 
-                    ))}
+                    ))
+
+                )}
+
+
 
                 </tbody>
 
             </table>
 
         </div>
+
     );
 }
 
