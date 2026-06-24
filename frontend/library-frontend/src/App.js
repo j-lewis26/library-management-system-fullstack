@@ -10,6 +10,7 @@ import BookTable from './components/BookTable';
 import EditBookModal from "./components/EditBookModal";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import API_BASE_URL from "./config/api";
 
 function App() {
 
@@ -27,7 +28,7 @@ function App() {
 
             const response =
                 await axios.get(
-                    "http://localhost:8080/books"
+                    `${API_BASE_URL}/books`
                 );
 
             setBooks(response.data);

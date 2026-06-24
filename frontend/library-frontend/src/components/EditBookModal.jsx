@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
+import API_BASE_URL from "../config/api";
 
 function EditBookModal({
     book,
@@ -45,7 +46,7 @@ const handleUpdate = async () => {
     try {
 
         await axios.put(
-            `http://localhost:8080/books/${book.id}`,
+             `${API_BASE_URL}/books/${book.id}`,
             {
                 name,
                 author,
@@ -71,7 +72,7 @@ const handleUpdate = async () => {
        try {
 
            await axios.delete(
-               `http://localhost:8080/books/${book.id}`
+               `${API_BASE_URL}/books/${book.id}`
            );
 
            toast.success("Book Deleted Successfully");

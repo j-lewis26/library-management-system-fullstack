@@ -1,6 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
+import API_BASE_URL from "../config/api";
 
 function AddBookForm({ fetchBooks }) {
 
@@ -18,7 +19,7 @@ function AddBookForm({ fetchBooks }) {
             setLoading(true);
 
             await axios.post(
-                "http://localhost:8080/books",
+                `${API_BASE_URL}/books`,
                 {
                     name,
                     author,
